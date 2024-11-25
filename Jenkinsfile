@@ -18,7 +18,7 @@ pipeline {
                 script {
                     def mvn = tool 'maven'
                     withSonarQubeEnv(installationName: 'sonar') {
-                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=demoSonarQube -Dsonar.projectName='demoSonarQube'"
+                        sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=demoSonarQube -Dsonar.projectName='demoSonarQube' 2>&1 | sed -r \"s/\\x1B\\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g\""
                     }
                 }
             }
@@ -26,8 +26,8 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
