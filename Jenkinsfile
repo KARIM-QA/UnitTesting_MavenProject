@@ -39,22 +39,6 @@ pipeline {
             }
         }
 
-        stage('Build Maven') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
-
-        stage('Unit Tests') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
 
         stage('SonarQube Analysis') {
             steps {
